@@ -1,0 +1,13 @@
+E:\Projects\Vex\Vex\bin\Debug\net10.0\Vex.deps.json
+E:\Projects\Vex\Vex\bin\Debug\net10.0\Vex.dll
+E:\Projects\Vex\Vex\bin\Debug\net10.0\Vex.pdb
+E:\Projects\Vex\Vex\obj\Debug\net10.0\Vex.csproj.AssemblyReference.cache
+E:\Projects\Vex\Vex\obj\Debug\net10.0\Vex.GeneratedMSBuildEditorConfig.editorconfig
+E:\Projects\Vex\Vex\obj\Debug\net10.0\Vex.AssemblyInfoInputs.cache
+E:\Projects\Vex\Vex\obj\Debug\net10.0\Vex.AssemblyInfo.cs
+E:\Projects\Vex\Vex\obj\Debug\net10.0\Vex.csproj.CoreCompileInputs.cache
+E:\Projects\Vex\Vex\obj\Debug\net10.0\Vex.dll
+E:\Projects\Vex\Vex\obj\Debug\net10.0\refint\Vex.dll
+E:\Projects\Vex\Vex\obj\Debug\net10.0\Vex.pdb
+E:\Projects\Vex\Vex\obj\Debug\net10.0\ref\Vex.dll
+E:\Projects\Vex\Vex\obj\Debug\net10.0\Vex.csproj.Up2Date
