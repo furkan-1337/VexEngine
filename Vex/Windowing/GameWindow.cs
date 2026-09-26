@@ -74,7 +74,7 @@ namespace Vex.Windowing
             _gl.Viewport(0, 0, (uint)_window.FramebufferSize.X, (uint)_window.FramebufferSize.Y);
 
             Input.Initialize(_window);
-            Renderer2D.Initialize(_gl);
+            Renderer.Initialize(_gl);
             AssetsManager.Initialize(_gl);
             Debug.Log(Debug.LogLevel.Info, "Window loaded successfully.");
         }
@@ -94,16 +94,16 @@ namespace Vex.Windowing
             _gl.ClearColor(color.X, color.Y, color.Z, color.W);
             _gl.Clear(ClearBufferMask.ColorBufferBit);
 
-            Renderer2D.BeginScene(SceneManager.CurrentScene?.Camera);
+            Renderer.BeginScene(SceneManager.CurrentScene?.Camera);
             SceneManager.Render(deltaTime);
-            Renderer2D.EndScene();
+            Renderer.EndScene();
         }
 
         private void Closing()
         {
             SceneManager.Shutdown();
             Input.Shutdown();
-            Renderer2D.Shutdown();
+            Renderer.Shutdown();
             AssetsManager.Shutdown();
             Debug.Log(Debug.LogLevel.Info, "Window closed successfully.");
         }

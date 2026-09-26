@@ -18,16 +18,16 @@ namespace Vex.Engine.Assets
             Debug.Log(Debug.LogLevel.Info, "AssetsManager initialized successfully.");
         }
 
-        public static Texture2D LoadTexture(string filePath, GLEnum filtering = GLEnum.Linear, GLEnum wrapping = GLEnum.Repeat)
+        public static Texture LoadTexture(string filePath, GLEnum filtering = GLEnum.Linear, GLEnum wrapping = GLEnum.Repeat)
         {
             if(_gl == null)
                 throw new VexInvalidStateException("AssetsManager is not initialized.");
 
             string name = Path.GetFileNameWithoutExtension(filePath);
             if (_assets.TryGetValue(name, out var existing))
-                return (Texture2D)existing;
+                return (Texture)existing;
 
-            var texture = new Texture2D(_gl,filePath);
+            var texture = new Texture(_gl,filePath, filtering, wrapping);
 
             texture.Id = _nextId++;
             _assets.Add(name, texture);

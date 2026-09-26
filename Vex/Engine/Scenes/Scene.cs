@@ -14,7 +14,7 @@ namespace Vex.Engine.Scenes
         public static int Count { get; private set; } = 0;
         public bool IsLoaded { get; internal set; } 
         public Vector4D<float>? ClearColor { get; set; }
-        public Camera2D? Camera { get; set; } = new Camera2D();
+        public Camera? Camera { get; set; } = new Camera();
 
         public Scene(string name)
         {

@@ -9,7 +9,7 @@ using Vex.Graphics;
 
 namespace Vex.Engine.Assets
 {
-    public class Texture2D : GameAsset
+    public class Texture : GameAsset
     {
         private GL? _gl = null;
         public uint Handle;
@@ -21,7 +21,7 @@ namespace Vex.Engine.Assets
         public GLEnum Filtering { get; private set; } = GLEnum.Linear;
         public GLEnum Wrapping { get; private set; } = GLEnum.Repeat;
 
-        public unsafe Texture2D(GL gl, string filePath, GLEnum filtering = GLEnum.Linear, GLEnum wrapping = GLEnum.Repeat)
+        public unsafe Texture(GL gl, string filePath, GLEnum filtering = GLEnum.Linear, GLEnum wrapping = GLEnum.Repeat)
         {
             _gl = gl ?? throw new VexArgumentNullException("Texture2D: GL instance cannot be null.");
 

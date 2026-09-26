@@ -10,7 +10,7 @@ using Vex.Engine.Assets;
 
 namespace Vex.Graphics
 {
-    public static class Renderer2D
+    public static class Renderer
     {
         private static GL _gl = null!;
         private static Vector4D<float> _clearColor = new Vector4D<float>(0.1f, 0.1f, 0.15f, 1.0f);
@@ -117,7 +117,7 @@ namespace Vex.Graphics
             _currentShader = shader ?? _defaultShader;
         }
 
-        public static void BeginScene(Camera2D? camera = null)
+        public static void BeginScene(Camera? camera = null)
         {
             _currentShader.Use();
             if(camera != null)
@@ -129,7 +129,15 @@ namespace Vex.Graphics
             DrawBatch();
         }
 
-        private static float GetTextureIndex(Texture2D texture)
+        private static readonly Vector2D<float>[] DefaultTexCoords = new Vector2D<float>[]
+        {
+            new Vector2D<float>(0.0f, 0.0f),
+            new Vector2D<float>(1.0f, 0.0f),
+            new Vector2D<float>(1.0f, 1.0f),
+            new Vector2D<float>(0.0f, 1.0f)
+        };
+
+        private static float GetTextureIndex(Engine.Assets.Texture texture)
         {
             for (uint i = 1; i < _textureSlotIndex; i++)
             {
@@ -145,34 +153,59 @@ namespace Vex.Graphics
             return index;
         }
 
-        public static void DrawQuad(Vector2D<float> position, Vector2D<float> size, Vector4D<float> color)
+        public static void DrawQuad(Vector2D<float> position, Vector2D<float> size, Vector4D<float> color, float rotation = 0.0f)
         {
-            DrawQuadInternal(position, size, color, textureIndex: 0.0f);
+            DrawQuadInternal(position, size, color, rotation, textureIndex: 0.0f, DefaultTexCoords);
         }
 
-        public static void DrawQuad(Vector2D<float> position, Vector2D<float> size, Texture2D texture, Vector4D<float> color)
+        public static void DrawQuad(Vector2D<float> position, Vector2D<float> size, Engine.Assets.Texture texture, Vector4D<float> color, float rotation = 0.0f)
         {
             float textureIndex = GetTextureIndex(texture);
-            DrawQuadInternal(position, size, color, textureIndex);
+            DrawQuadInternal(position, size, color, rotation, textureIndex, DefaultTexCoords);
         }
 
-        public static void DrawQuad(Vector2D<float> position, Vector2D<float> size, Texture2D texture)
+        public static void DrawQuad(Vector2D<float> position, Vector2D<float> size, Engine.Assets.Texture texture, float rotation = 0.0f)
         {
-            DrawQuad(position, size, texture, new Vector4D<float>(1.0f, 1.0f, 1.0f, 1.0f));
+            DrawQuad(position, size, texture, new Vector4D<float>(1.0f, 1.0f, 1.0f, 1.0f), rotation);
+        }
+        public static void DrawQuad(Vector2D<float> position, Vector2D<float> size, SubTexture subTexture, Vector4D<float> color, float rotation = 0.0f)
+        {
+            float textureIndex = GetTextureIndex(subTexture.Texture);
+            DrawQuadInternal(position, size, color, rotation, textureIndex, subTexture.TexCoords);
         }
 
-        private static void DrawQuadInternal(Vector2D<float> position, Vector2D<float> size, Vector4D<float> color, float textureIndex)
+        private static void DrawQuadInternal(Vector2D<float> position, Vector2D<float> size, Vector4D<float> color, float rotation, float textureIndex, Vector2D<float>[] texCoords)
         {
             if (_indexCount >= _maxIndices)
                 DrawBatch();
             float halfW = size.X / 2.0f;
             float halfH = size.Y / 2.0f;
-            Add(new Vertex(new Vector3D<float>(position.X - halfW, position.Y - halfH, 0.0f), color, new Vector2D<float>(0.0f, 0.0f), textureIndex));
-            Add(new Vertex(new Vector3D<float>(position.X + halfW, position.Y - halfH, 0.0f), color, new Vector2D<float>(1.0f, 0.0f), textureIndex));
-            Add(new Vertex(new Vector3D<float>(position.X + halfW, position.Y + halfH, 0.0f), color, new Vector2D<float>(1.0f, 1.0f), textureIndex));
-            Add(new Vertex(new Vector3D<float>(position.X - halfW, position.Y + halfH, 0.0f), color, new Vector2D<float>(0.0f, 1.0f), textureIndex));
+
+            Vector3D<float> p0, p1, p2, p3;
+            if (rotation == 0.0f)
+            {
+                p0 = new Vector3D<float>(position.X - halfW, position.Y - halfH, 0.0f);
+                p1 = new Vector3D<float>(position.X + halfW, position.Y - halfH, 0.0f);
+                p2 = new Vector3D<float>(position.X + halfW, position.Y + halfH, 0.0f);
+                p3 = new Vector3D<float>(position.X - halfW, position.Y + halfH, 0.0f);
+            }
+            else
+            {
+                var rotationDegree = Math.SinCosDeg(rotation);
+                p0 = new Vector3D<float>((-halfW * rotationDegree.Cos - -halfH * rotationDegree.Sin) + position.X, (-halfW * rotationDegree.Sin + -halfH * rotationDegree.Cos) + position.Y, 0.0f);
+                p1 = new Vector3D<float>((halfW * rotationDegree.Cos - -halfH * rotationDegree.Sin) + position.X, (halfW * rotationDegree.Sin + -halfH * rotationDegree.Cos) + position.Y, 0.0f);
+                p2 = new Vector3D<float>((halfW * rotationDegree.Cos - halfH * rotationDegree.Sin) + position.X, (halfW * rotationDegree.Sin + halfH * rotationDegree.Cos) + position.Y, 0.0f);
+                p3 = new Vector3D<float>((-halfW * rotationDegree.Cos - halfH * rotationDegree.Sin) + position.X, (-halfW * rotationDegree.Sin + halfH * rotationDegree.Cos) + position.Y, 0.0f);
+            }
+
+
+            Add(new Vertex(p0, color, texCoords[0], textureIndex));
+            Add(new Vertex(p1, color, texCoords[1], textureIndex));
+            Add(new Vertex(p2, color, texCoords[2], textureIndex));
+            Add(new Vertex(p3, color, texCoords[3], textureIndex));
             _indexCount += 6;
         }
+
 
         private static unsafe void DrawBatch()
         {

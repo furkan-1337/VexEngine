@@ -18,6 +18,12 @@ namespace Vex.Debugging
         }
     }
 
+    public class VexArgumentOutOfRangeException : VexException
+    {
+        public VexArgumentOutOfRangeException(string message) : base(message) { }
+        public VexArgumentOutOfRangeException(string message, Exception? innerException) : base(message, innerException) { }
+    }
+
     public class VexArgumentNullException : VexException
     {
         public VexArgumentNullException(string message) : base(message) { }

@@ -7,7 +7,7 @@ using Vex.Debugging;
 
 namespace Vex.Graphics
 {
-    public class Camera2D
+    public class Camera
     {
         private Vector2D<float> _position = new Vector2D<float>(0f, 0f);
         private float _rotation = 0.0f;
@@ -19,7 +19,7 @@ namespace Vex.Graphics
         private Matrix4x4 _projection = Matrix4x4.Identity;
         private Matrix4x4 _viewProjection = Matrix4x4.Identity;
 
-        public Camera2D(float aspectRatio = 16.0f / 9.0f)
+        public Camera(float aspectRatio = 16.0f / 9.0f)
         {
             _aspectRatio = aspectRatio;
             RecalculateMatrices();
